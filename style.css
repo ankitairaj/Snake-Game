@@ -43,7 +43,7 @@ body {
 .food {
     width: 20px;
     height: 20px;
-    background-color: green;
+    background-color: red;
     position:absolute;
     border-radius: 50%;
     animation: blink 1s infinite;

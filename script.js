@@ -40,11 +40,37 @@ document.addEventListener('DOMContentLoaded', () => {
         
     }
 
+    function moveFood() {
+        
+        let newX, newY;
+
+        do {
+            newX = Math.floor(Math.random()*((arenaSize - cellSize)/cellSize)*cellSize)
+            newY = Math.floor(Math.random()*((arenaSize - cellSize)/cellSize)*cellSize)
+        }while(snake.some(snakeCell => snakeCell.x === newX && snakeCell.y === newY));
+        food = {x:newX, y:newY};
+    }
+
+
+    function updateSnake() {
+        const newHead = {x: snake[0].x + dx, y:snake[0].y + dy}
+        snake.unshift(newHead);
+        if(newHead.x === food.x && newHead.y === food.y) {
+            score += 1;
+            moveFood();
+        }
+        else {
+            snake.pop(); 
+        }
+    }
+
 
     function gameLoop() {
         setInterval(() => {
+            
             drawScoreBoard();
             drawFoodAndSnake();
+            updateSnake();
         }, 1000);
     }
 
