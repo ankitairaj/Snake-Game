@@ -9,8 +9,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let dx = cellSize;
     let dy = 0;
+    
 
-    function startGame() {
+    function drawDiv(x, y, className) {
+        const div = document.createElement('div');
+        div.classList.add(className);
+        div.style.top = `${y}px`;
+        div.style.left = `${x}px`;
+        return div;
+    }
+
+
+
+    function drawScoreBoard() {
+        const scoreBoard = document.getElementById('score-board');
+        scoreBoard.textContent = `Score : ${score}`;
+    }
+
+
+    function drawFoodAndSnake() {
+        gameArena.innerHTML = ' ';
+
+        const foodElement = drawDiv(food.x, food.y, 'food');
+        gameArena.appendChild(foodElement);
+    }
+
+
+    function gameLoop() {
+        setInterval(() => {
+            drawScoreBoard();
+            drawFoodAndSnake();
+        }, 1000);
+    }
+
+    function runGame() {
+        gameStarted = true;
+        gameLoop();
+    }
+
+    function initiateGame() {
         const scoreBoard = document.createElement('div');
         scoreBoard.id = 'score-board';
         // scoreBoard.textContent = '10';
@@ -21,9 +58,15 @@ document.addEventListener('DOMContentLoaded', () => {
         startButton.textContent= 'Start Game';
         startButton.classList.add('start-button');
         document.body.appendChild(startButton);
+
+
+        startButton.addEventListener('click', () => {
+            startButton.style.display = 'none';
+            runGame();
+        })
     }
 
-    startGame();
+    initiateGame();
 
 
 
