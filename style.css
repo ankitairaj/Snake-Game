@@ -46,7 +46,7 @@ body {
     background-color: green;
     position:absolute;
     border-radius: 50%;
-    animation: blink 1s infinite ;
+    animation: blink 1s infinite;
 }
 
 @keyframes blink {
