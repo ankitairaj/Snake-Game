@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let dx = cellSize;
     let dy = 0;
-    
+    let gameSpeed = 350;
+    let IntervalId;
 
     function drawDiv(x, y, className) {
         const div = document.createElement('div');
@@ -41,12 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function moveFood() {
-        
         let newX, newY;
-
         do {
-            newX = Math.floor(Math.random()*((arenaSize - cellSize)/cellSize)*cellSize)
-            newY = Math.floor(Math.random()*((arenaSize - cellSize)/cellSize)*cellSize)
+            newX = Math.floor(Math.random()*((arenaSize - cellSize)/cellSize))*cellSize;
+            newY = Math.floor(Math.random()*((arenaSize - cellSize)/cellSize))*cellSize;
         }while(snake.some(snakeCell => snakeCell.x === newX && snakeCell.y === newY));
         food = {x:newX, y:newY};
     }
@@ -57,6 +56,12 @@ document.addEventListener('DOMContentLoaded', () => {
         snake.unshift(newHead);
         if(newHead.x === food.x && newHead.y === food.y) {
             score += 1;
+            if(gameSpeed > 50) {
+                clearInterval(IntervalId);
+                gameSpeed -= 30;
+                gameLoop();
+            }
+            
             moveFood();
         }
         else {
@@ -79,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function gameLoop() {
-        setInterval(() => {
+        IntervalId = setInterval(() => {
             if(isGameOver()) {
                 if(!gameStarted) {
                     return;
@@ -89,15 +94,46 @@ document.addEventListener('DOMContentLoaded', () => {
                 gameStarted = false;
                 return;
             }
+            updateSnake();
             drawScoreBoard();
             drawFoodAndSnake();
-            updateSnake();
-        }, 500);
+            
+        }, gameSpeed);
+    }
+
+    function changeDirection(e) {
+        const left_key = 37;
+        const up_key = 38;
+        const down_key = 40;
+        const right_key = 39;
+
+        const keyPressed = e.keyCode;
+
+        if(keyPressed == left_key && dx != cellSize) {
+            dy = 0;
+            dx = -cellSize;
+        }
+        if(keyPressed == right_key && dx != -cellSize) {
+            dy = 0;
+            dx = cellSize;
+        }
+        if(keyPressed == down_key && dy != -cellSize ) {
+            dy = cellSize;
+            dx = 0;
+        }
+        if(keyPressed == up_key && dy != cellSize ) {
+            dy = -cellSize;
+            dx = 0;
+        }
     }
 
     function runGame() {
-        gameStarted = true;
-        gameLoop();
+        if(!gameStarted) {
+            gameStarted = true;
+            gameLoop();
+            document.addEventListener('keydown', changeDirection);
+        }
+        
     }
 
     function initiateGame() {
